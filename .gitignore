@@ -1,4 +1,4 @@
 .cache/
 node_modules/*
-.DS_Strore
+.DS_Store
 dist/*
