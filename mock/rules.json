@@ -1,0 +1,12 @@
+{
+    "GET /fetchList 10" : {
+        "name"   : "fake.name.lastName",
+        "phone"  : "fake.phone.phoneNumber",
+        "avatar" : "fake.image.avatar",
+        "city"   : "fake.address.city"
+    },
+    "GET /getZhihuNews" : "http://news-at.zhihu.com/api/4/news/latest",
+    "POST /getList 10": {
+        "name": "fake.name.lastName"
+    }
+}
