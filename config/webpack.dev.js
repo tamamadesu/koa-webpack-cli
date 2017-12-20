@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 let webpack           = require('webpack');
 let merge             = require('webpack-merge');
-let baseWebpackConfig = require("./webpack.base.js");
-let ExtractTextPlugin = require("extract-text-webpack-plugin");
-let FriendlyError     = require("friendly-errors-webpack-plugin");
+let baseWebpackConfig = require('./webpack.base.js');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let FriendlyError     = require('friendly-errors-webpack-plugin');
 let WriteFilePlugin   = require('write-file-webpack-plugin');
 
-let config = require("./index");
+let config = require('./index');
 let env    = config.npmCmd;
 
 const devWebpackConfig = merge(baseWebpackConfig,{
@@ -23,7 +23,7 @@ const devWebpackConfig = merge(baseWebpackConfig,{
 });
 
 if(config.hmr){
-    devWebpackConfig.output.publicPath = "/memory/";
+    devWebpackConfig.output.publicPath = '/memory/';
     devWebpackConfig.plugins = devWebpackConfig.plugins.concat([
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),

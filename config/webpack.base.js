@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
 let fs                    = require('fs');
-let config                = require("./index");
+let config                = require('./index');
 let webpack               = require('webpack');
-let ExtractTextPlugin     = require("extract-text-webpack-plugin");
+let ExtractTextPlugin     = require('extract-text-webpack-plugin');
 let HtmlWebpackPlugin     = require('html-webpack-plugin');
 let WebpackNotifierPlugin = require('webpack-notifier');
 
@@ -12,7 +12,7 @@ let basePath   = config.basePath;
 let arrArgv    = config.arrArgv;
 let outputPath = config[env].output.path;
 let srcDir     = basePath + '/src/js/';
-let hotReload  = 'webpack-hot-middleware/client';
+let hotReload  = 'webpack-hot-middleware/client?reload=true';
 
 // see: https://github.com/webpack/loader-utils/issues/56
 process.noDeprecation = true;
@@ -25,10 +25,9 @@ let exportConfig = {
         path: outputPath,
         jsonpFunction:'starCityJsonp',
     },
-    // 推荐用 source-map，和打包文件分开，避免单文件过大的问题，但是目前chrome对sourcemap支持有bug，等以后修复
     devtool: env == 'dev' ? '#cheap-module-eval-source-map' : false, //source-map
     performance: {
-        hints: env == 'dev' ? false : "warning"
+        hints: env == 'dev' ? false : 'warning'
     },
     module: {
         rules:[{
@@ -37,12 +36,20 @@ let exportConfig = {
                 use: 'babel-loader',
                 include: basePath
             },{
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                options: {
+                    configFile: basePath +  '/tsconfig.json'
+                },
+                exclude: /node_modules/,
+                include: basePath
+            },{
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({fallback:'style-loader', use:`css-loader?${env == "dev" ? '': 'minimize&'}sourceMap!postcss-loader`}),
+                use: ExtractTextPlugin.extract({fallback:'style-loader', use:`css-loader?${env == 'dev' ? '': 'minimize&'}sourceMap!postcss-loader`}),
                 include: basePath
             },{
                 test: /\.sass$/,
-                use: ExtractTextPlugin.extract({fallback:'style-loader', use:`css-loader?${env == "dev" ? '': 'minimize&'}sourceMap!postcss-loader!sass-loader?indentedSyntax`}),
+                use: ExtractTextPlugin.extract({fallback:'style-loader', use:`css-loader?${env == 'dev' ? '': 'minimize&'}sourceMap!postcss-loader!sass-loader?indentedSyntax`}),
                 include: basePath
             },{
                 test: /\.vue$/,
@@ -50,13 +57,13 @@ let exportConfig = {
                 options: {
                     postcss: [require('postcss-cssnext')()],
                     loaders: {
-                        css: ExtractTextPlugin.extract({use: `css-loader?${env == "dev" ? '': 'minimize&'}sourceMap`}),
-                        sass: ExtractTextPlugin.extract({use: `css-loader?${env == "dev" ? '': 'minimize&'}sourceMap!sass-loader?indentedSyntax`})
+                        css: ExtractTextPlugin.extract({use: `css-loader?${env == 'dev' ? '': 'minimize&'}sourceMap`}),
+                        sass: ExtractTextPlugin.extract({use: `css-loader?${env == 'dev' ? '': 'minimize&'}sourceMap!sass-loader?indentedSyntax`})
                     },
                 }
             },{
                 test: /\.pug$/,
-                loader: "pug-loader",
+                loader: 'pug-loader',
                 options: {
                     pretty: env == 'dev' ? true : false
                 }
@@ -84,6 +91,9 @@ let exportConfig = {
             }
         ]
     },
+    resolve: {
+        extensions: [ '.tsx', '.ts', '.js' ]
+    },
     plugins:[
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -102,7 +112,7 @@ const getAllEnteyWithHtml = (arrArgv) => {
     // add entry hotReload
     fs.readdirSync(srcDir).forEach(function(file){
         let name = file.slice(0,file.lastIndexOf('.'));
-        if(config.hmr && env === "dev"){
+        if(config.hmr && env === 'dev'){
             entrys[name] = [hotReload,srcDir + file];
         }else{
             entrys[name] = srcDir + file;

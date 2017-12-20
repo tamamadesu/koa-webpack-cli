@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 const color                = require('colors');
 const webpack              = require('webpack');
 const merge                = require('webpack-merge');
 const WebpackMd5Hash       = require('webpack-md5-hash');
-const baseWebpackConfig    = require("./webpack.base.js");
-const ExtractTextPlugin    = require("extract-text-webpack-plugin");
+const baseWebpackConfig    = require('./webpack.base.js');
+const ExtractTextPlugin    = require('extract-text-webpack-plugin');
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 
-const config               = require("./index");
+const config               = require('./index');
 
 const  prodWebpackConfig = merge(baseWebpackConfig,{
     output : config.build.output,
@@ -21,15 +21,18 @@ const  prodWebpackConfig = merge(baseWebpackConfig,{
         new ParallelUglifyPlugin({
             cacheDir: '.cache/',
             workerCount:require('os').cpus.length,
+            sourceMap: true,
             uglifyJS: {
                 compress: {
                     warnings: false,
                     drop_debugger: true,
                     drop_console: true
                 },
-                comments: false,
-                sourceMap: true,
-                mangle: true
+                output: {
+                    beautify: false,
+                    preamble: '/* uglified */',
+                    comments: false
+                }
             },
         }),
         new WebpackMd5Hash()

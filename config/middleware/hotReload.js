@@ -11,6 +11,7 @@ const hotReload = (webpackConfig) => {
         dev : {
             publicPath : webpackConfig.output.publicPath,
             stats : {
+                modules: false,
                 chunks : false,
                 colors : true
             }
